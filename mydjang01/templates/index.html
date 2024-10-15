@@ -1,50 +1,76 @@
 <!doctype html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Melon List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.16/babel.min.js"></script>
 
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"/>
 
-    <style>
-        body {
-            width: 400px;
-            margin: 0 auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        form {margin-bottom: 10px;}
-        form input { width: 100%;}
-    </style>
+
 </head>
 <body>
 
-    <h1>Melon List</h1>
+<div class="container">
+    <h1 class="fw-bold">Melon List</h1>
 
-        <form action="" method="get" autocomplete="off">
+    <form action="" method="get" autocomplete="off" class="my-4">
         <input type="text" name="query" placeholder="검색어를 입력해주세요" autofocus
-                value="{{query}}">
+               value="{{query}}" class="form-control">
     </form>
 
 
-    <table>
+    <table class="table table-hover table-bordered"
+           id="song-list-table">
         <thead>
-            <tr><th>곡명</th><th>가수</th></tr>
+        <tr>
+            <th>곡명</th>
+            <th>가수</th>
+        </tr>
         </thead>
         <tbody>
-            {% for song in song_list %}
-                <tr>
-                    <td>{{ song.곡명 }}</td>
-                    <td>{{ song.가수 }}</td>
-                </tr>
-            {% endfor %}
+
         </tbody>
     </table>
 
+    {{song_list_data|json_script:" ong-list-json"}}
+
+    <script type="text/babel">
+        function SongList() {
+            const [songList, setSongList] = React.useState([]);
+            React.useEffect(() => {
+                fetch("/api/song-list.json")
+                    .then(response => response.json())
+                    .then(_songList => {
+                        setSongList(_songList);
+                    });
+            }, []);
+
+            return(
+                <>
+                    {songList.map(song => {
+                        return (
+                            <tr key={song.id}>
+                                <td>{song.곡명}</td>
+                                <td>{song.가수}</td>
+                            </tr>
+                        )
+                    })}
+                </>
+            )
+        }
+
+        ReactDOM.render(
+            <SongList/>,
+            document.querySelector("#song-list-table tbody")
+        );
+
+    </script>
+
+</div>
 </body>
 </html>

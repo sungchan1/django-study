@@ -9,7 +9,7 @@ from django.db import models
 from django.db.models import Q
 
 # from django.db import connection
-from django.http import HttpRequest
+from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.urls import path
 
@@ -50,6 +50,20 @@ class Song(models.Model):
 
 
 def index(request: HttpRequest):
+    # query = request.GET.get("query", "").strip()
+    # # song_list = get_song_list(query)
+    #
+    # song_list = Song.objects.all()
+    # if query:
+    #     song_list = song_list.filter(
+    #         Q(곡명__icontains=query) | Q(가수__icontains=query)  # 포함이 되었다면
+    #     )
+    #
+    # song_list_data = list(song_list.values())
+    return render(request, "index.html")
+
+
+def song_list_api(request: HttpRequest):
     query = request.GET.get("query", "").strip()
     # song_list = get_song_list(query)
 
@@ -58,7 +72,13 @@ def index(request: HttpRequest):
         song_list = song_list.filter(
             Q(곡명__icontains=query) | Q(가수__icontains=query)  # 포함이 되었다면
         )
-    return render(request, "index.html", {"song_list": song_list, "query": query})
+
+    song_list_data = list(song_list.values())
+
+    return JsonResponse(
+        song_list_data, safe=False, json_dumps_params={"ensure_ascii": False},
+        content_type="application/json; charset=utf-8"
+    )
 
 
 # def get_song_list(query: str):
@@ -87,6 +107,7 @@ def index(request: HttpRequest):
 
 urlpatterns = [
     path("", index),
+    path("api/song-list.json", song_list_api),
 ]
 
 execute_from_command_line(sys.argv)
