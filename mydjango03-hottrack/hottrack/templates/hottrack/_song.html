@@ -1,0 +1,25 @@
+{# 경로 : hottrack/templates/hottrack/_song.html #}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+
+<div class="card shadow-sm">
+    {# refs: https://picsum.photos/ #}
+    <img src="{{ song.cover_url}}" alt="{{  song.name }}" class="cart-img-top" />
+
+    <div class="card-body">
+        <p class="card-text">
+        <div class="text-nowrap overflow-hidden text-truncate">{{ song.artist_name }} | {{ song.name }}</div>
+        </p>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+                <a href= "{{ song.melon_detail_url }}" type="button" class="btn btn-sm btn-outline-secondary">Melon</a>
+                <a href="{{ song.youtube_search_url }}" type="button" class="btn btn-sm btn-outline-danger">Yotube</a>
+            </div>
+            <small class="text-body-secondary">
+                <i class="bi bi-heart-fill" style="color: red;"> </i>
+                {{ song.like_count }}
+            </small>
+
+        </div>
+    </div>
+</div>
