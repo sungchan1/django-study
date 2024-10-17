@@ -5,6 +5,7 @@ from typing import Dict
 from urllib.parse import quote
 
 from django.db import models
+from django.utils.html import format_html
 
 
 # 파이썬 3.7부터 지원
@@ -19,6 +20,10 @@ class Song(models.Model):
     genre = models.CharField(max_length=100)
     release_date = models.DateField()
     like_count = models.PositiveIntegerField()
+
+    @property
+    def cover_image_tag(self):
+        return format_html(f'<img src="{self.cover_url}" style="width: 50px;"/>')
 
     @property
     def melon_detail_url(self) -> str:
