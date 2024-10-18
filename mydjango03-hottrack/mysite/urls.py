@@ -25,7 +25,7 @@ from django.urls import path, include
 urlpatterns = [
     path(route="hottrack/", view=include("hottrack.urls")),
     path(route="", view=lambda request: redirect("/hottrack/")),
-    path("admin/", admin.site.urls),
+    # path("admin/", admin.site.urls),
 ]
 
 if settings.DEBUG:
